@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 import { describe, it, beforeEach } from 'node:test';
-import { ResidentService } from '../src/services/ResidentService.js';
+import { ResidentRegistrationService } from '../src/services/ResidentRegistrationService.js';
 import { ResidentRepository } from '../src/repositories/ResidentRepository.js';
 
 describe('T04 - Resident Registration Service', () => {
@@ -17,7 +17,7 @@ describe('T04 - Resident Registration Service', () => {
 
   beforeEach(() => {
     repository = new ResidentRepository();
-    service = new ResidentService(undefined, repository);
+    service = new ResidentRegistrationService(undefined, repository);
   });
 
   it('Test 1 - Register a Valid Resident', () => {
