@@ -3,9 +3,9 @@ import { describe, it, beforeEach, afterEach } from 'node:test';
 import { DatabaseSync } from 'node:sqlite';
 import { Resident } from '../src/models/Resident.js';
 import { ResidentRepository } from '../src/repositories/ResidentRepository.js';
-import { ResidentSearchService } from '../src/services/ResidentSearchService.js';
+import { ResidentQueryService } from '../src/services/ResidentQueryService.js';
 
-describe('T05 - Resident Search and Listing Service', () => {
+describe('T05 - Resident Query Service', () => {
   let db;
   let repository;
   let service;
@@ -25,7 +25,7 @@ describe('T05 - Resident Search and Listing Service', () => {
       )
     `);
     repository = new ResidentRepository(db);
-    service = new ResidentSearchService(repository);
+    service = new ResidentQueryService(repository);
   });
 
   afterEach(() => {

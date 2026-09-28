@@ -97,4 +97,29 @@ export class ResidentRepository {
       status: row.status
     }));
   }
+
+update(resident) {
+    // T06 Guide: Only update editable fields. Do NOT update status or id.
+    const updateSQL = `
+      UPDATE residents 
+      SET first_name = ?, 
+          last_name = ?, 
+          address = ?, 
+          contact_number = ?, 
+          email = ?
+      WHERE id = ?
+    `;
+    
+    const stmt = this.db.prepare(updateSQL);
+    
+    stmt.run(
+      resident.firstName,
+      resident.lastName,
+      resident.address,
+      resident.contactNumber,
+      resident.email,
+      resident.id
+    );
+  }
 }
+

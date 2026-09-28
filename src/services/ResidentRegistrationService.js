@@ -2,7 +2,7 @@ import { Resident } from '../models/Resident.js';
 import { ResidentValidator } from './ResidentValidator.js';
 import { ResidentRepository } from '../repositories/ResidentRepository.js';
 
-export class ResidentService {
+export class ResidentRegistrationService {
   constructor(
     validator = new ResidentValidator(),
     repository = new ResidentRepository()

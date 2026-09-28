@@ -1,6 +1,6 @@
 import { ResidentRepository } from '../repositories/ResidentRepository.js';
 
-export class ResidentSearchService {
+export class ResidentQueryService {
   constructor(repository = new ResidentRepository()) {
     this.repository = repository;
   }

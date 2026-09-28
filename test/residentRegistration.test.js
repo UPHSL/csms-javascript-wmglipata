@@ -1,9 +1,11 @@
 import assert from 'node:assert';
-import { describe, it, beforeEach } from 'node:test';
-import { ResidentService } from '../src/services/ResidentService.js';
+import { describe, it, beforeEach, afterEach } from 'node:test';
+import { DatabaseSync } from 'node:sqlite';
+import { ResidentRegistrationService } from '../src/services/ResidentRegistrationService.js';
 import { ResidentRepository } from '../src/repositories/ResidentRepository.js';
 
 describe('T04 - Resident Registration Service', () => {
+  let db;
   let service;
   let repository;
   
@@ -16,8 +18,26 @@ describe('T04 - Resident Registration Service', () => {
   };
 
   beforeEach(() => {
-    repository = new ResidentRepository();
-    service = new ResidentService(undefined, repository);
+    // Setup a fresh in-memory database for clean, isolated tests
+    db = new DatabaseSync(':memory:');
+    db.exec(`
+      CREATE TABLE residents (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        first_name TEXT NOT NULL,
+        last_name TEXT NOT NULL,
+        address TEXT NOT NULL,
+        contact_number TEXT NOT NULL,
+        email TEXT NOT NULL,
+        status TEXT NOT NULL
+      )
+    `);
+    
+    repository = new ResidentRepository(db);
+    service = new ResidentRegistrationService(undefined, repository);
+  });
+
+  afterEach(() => {
+    db.close();
   });
 
   it('Test 1 - Register a Valid Resident', () => {
