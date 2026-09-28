@@ -121,5 +121,18 @@ update(resident) {
       resident.id
     );
   }
+
+deactivate(residentId) {
+    // T07: Soft deactivation only. No DELETE statement.
+    const deactivateSQL = `
+      UPDATE residents 
+      SET status = 'Inactive' 
+      WHERE id = ?
+    `;
+    
+    const stmt = this.db.prepare(deactivateSQL);
+    stmt.run(residentId);
+  }
+  
 }
 
