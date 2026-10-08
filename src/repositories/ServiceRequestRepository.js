@@ -47,4 +47,11 @@ export class ServiceRequestRepository {
       status: row.status
     });
   }
+
+  updateStatus(id, newStatus) {
+    const updateSQL = `UPDATE service_requests SET status = ? WHERE id = ?`;
+    this.db.prepare(updateSQL).run(newStatus, id);
+    return this.findById(id);
+  }
+  
 }
