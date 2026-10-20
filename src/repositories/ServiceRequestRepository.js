@@ -53,5 +53,38 @@ export class ServiceRequestRepository {
     this.db.prepare(updateSQL).run(newStatus, id);
     return this.findById(id);
   }
+
+  query(searchTerm = '', statusFilter = '') {
+    let sql = `SELECT * FROM service_requests WHERE 1=1`;
+    const params = [];
+
+    // Partial, case-insensitive text search across two fields
+    if (searchTerm) {
+      sql += ` AND (service_type LIKE ? OR description LIKE ?)`;
+      params.push(`%${searchTerm}%`, `%${searchTerm}%`);
+    }
+
+    // Exact match status filter
+    if (statusFilter) {
+      sql += ` AND status = ?`;
+      params.push(statusFilter);
+    }
+
+    // Required deterministic ordering
+    sql += ` ORDER BY date_requested DESC, id DESC`;
+
+    const stmt = this.db.prepare(sql);
+    const rows = stmt.all(...params);
+
+    // Map database rows back to domain models
+    return rows.map(row => new ServiceRequest({
+      id: row.id,
+      residentId: row.resident_id,
+      serviceType: row.service_type,
+      description: row.description,
+      dateRequested: row.date_requested,
+      status: row.status
+    }));
+  }
   
 }
