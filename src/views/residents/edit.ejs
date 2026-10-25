@@ -1,0 +1,20 @@
+<h1>Edit Resident</h1>
+<a href="/residents">Back to List</a>
+
+<p><strong>ID:</strong> <%= resident.id %></p>
+<p><strong>Status:</strong> <%= resident.status %></p>
+
+<% if (errors.length > 0) { %>
+  <ul style="color: red;">
+    <% errors.forEach(err => { %> <li><%= err %></li> <% }) %>
+  </ul>
+<% } %>
+
+<form method="POST" action="/residents/<%= resident.id %>/edit">
+  <label>First Name: <input type="text" name="firstName" value="<%= resident.firstName %>"></label><br>
+  <label>Last Name: <input type="text" name="lastName" value="<%= resident.lastName %>"></label><br>
+  <label>Address: <input type="text" name="address" value="<%= resident.address %>"></label><br>
+  <label>Contact Number: <input type="text" name="contactNumber" value="<%= resident.contactNumber %>"></label><br>
+  <label>Email: <input type="email" name="email" value="<%= resident.email %>"></label><br>
+  <button type="submit">Update Resident</button>
+</form>

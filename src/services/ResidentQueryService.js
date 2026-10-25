@@ -22,4 +22,9 @@ export class ResidentQueryService {
     // Satisfies Rules 4, 5, 6, 9, 10, and 11: The repository handles the SQL matching
     return this.repository.search(trimmedTerm);
   }
+
+  findById(id) {
+      return this.repository.findById(id);
+  }
+
 }

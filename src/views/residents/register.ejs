@@ -1,0 +1,17 @@
+<h1>Register Resident</h1>
+<a href="/residents">Back to List</a>
+
+<% if (errors.length > 0) { %>
+  <ul style="color: red;">
+    <% errors.forEach(err => { %> <li><%= err %></li> <% }) %>
+  </ul>
+<% } %>
+
+<form method="POST" action="/residents/register">
+  <label>First Name: <input type="text" name="firstName" value="<%= formData.firstName || '' %>"></label><br>
+  <label>Last Name: <input type="text" name="lastName" value="<%= formData.lastName || '' %>"></label><br>
+  <label>Address: <input type="text" name="address" value="<%= formData.address || '' %>"></label><br>
+  <label>Contact Number: <input type="text" name="contactNumber" value="<%= formData.contactNumber || '' %>"></label><br>
+  <label>Email: <input type="email" name="email" value="<%= formData.email || '' %>"></label><br>
+  <button type="submit">Register</button>
+</form>

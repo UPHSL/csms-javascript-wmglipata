@@ -1,0 +1,35 @@
+<h1>Resident Management</h1>
+<a href="/residents/register">Register Resident</a>
+
+<form method="GET" action="/residents">
+  <input type="text" name="search" value="<%= search %>" placeholder="Search by name">
+  <button type="submit">Search</button>
+</form>
+
+<% if (residents.length === 0) { %>
+  <p>No Residents found.</p>
+<% } else { %>
+  <table>
+    <tr>
+      <th>ID</th><th>Name</th><th>Address</th><th>Contact</th><th>Email</th><th>Status</th><th>Actions</th>
+    </tr>
+    <% residents.forEach(res => { %>
+      <tr>
+        <td><%= res.id %></td>
+        <td><%= res.firstName %> <%= res.lastName %></td>
+        <td><%= res.address %></td>
+        <td><%= res.contactNumber %></td>
+        <td><%= res.email %></td>
+        <td><%= res.status %></td>
+        <td>
+          <a href="/residents/<%= res.id %>/edit">Edit</a>
+          <% if (res.status === 'Active') { %>
+            <form method="POST" action="/residents/<%= res.id %>/deactivate" style="display:inline;">
+              <button type="submit">Deactivate</button>
+            </form>
+          <% } %>
+        </td>
+      </tr>
+    <% }) %>
+  </table>
+<% } %>
