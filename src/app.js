@@ -5,6 +5,7 @@ import express from "express";
 
 import { notFound } from "./middleware/notFound.js";
 import mainRoutes from "./routes/index.js";
+import residentRoutes from "./routes/residentRoutes.js"; // <-- Add this import here
 
 const currentFile = fileURLToPath(import.meta.url);
 const currentDirectory = path.dirname(currentFile);
@@ -27,6 +28,8 @@ export function createApp() {
   app.use(express.static(path.join(currentDirectory, "..", "public")));
 
   app.use(mainRoutes);
+  
+  app.use('/residents', residentRoutes); // <-- Move this BEFORE notFound
 
   app.use(notFound);
 
