@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Service Request Details</title>
+</head>
+<body>
+  <nav>
+    <a href="/service-requests">Back to Service Requests</a>
+  </nav>
+
+  <h1>Service Request Details</h1>
+
+  <ul>
+    <li><strong>Request ID:</strong> <%= serviceRequest.id %></li>
+    <li><strong>Resident ID:</strong> <%= serviceRequest.residentId %></li>
+    <li><strong>Service Type:</strong> <%= serviceRequest.serviceType %></li>
+    <li><strong>Date Requested:</strong> <%= serviceRequest.dateRequested %></li>
+    <li><strong>Description:</strong> <%= serviceRequest.description %></li>
+    <li><strong>Current Status:</strong> <span style="font-size: 1.2em;"><%= serviceRequest.status %></span></li>
+  </ul>
+
+  <hr>
+
+  <h2>Workflow Actions</h2>
+  
+  <div style="display: flex; gap: 10px;">
+    <% if (serviceRequest.status === 'Pending') { %>
+      <!-- Pending Actions -->
+      <form action="/service-requests/<%= serviceRequest.id %>/start" method="POST">
+        <button type="submit" style="background-color: lightblue;">Start Processing</button>
+      </form>
+      <form action="/service-requests/<%= serviceRequest.id %>/cancel" method="POST">
+        <button type="submit" style="background-color: lightcoral;">Cancel Request</button>
+      </form>
+
+    <% } else if (serviceRequest.status === 'In Progress') { %>
+      <!-- In Progress Actions -->
+      <form action="/service-requests/<%= serviceRequest.id %>/complete" method="POST">
+        <button type="submit" style="background-color: lightgreen;">Complete Request</button>
+      </form>
+      <form action="/service-requests/<%= serviceRequest.id %>/cancel" method="POST">
+        <button type="submit" style="background-color: lightcoral;">Cancel Request</button>
+      </form>
+
+    <% } else { %>
+      <!-- Terminal States (Completed, Cancelled) -->
+      <p><em>This request is <strong><%= serviceRequest.status %></strong>. No further workflow actions are available.</em></p>
+    <% } %>
+  </div>
+</body>
+</html>
