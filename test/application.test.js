@@ -18,7 +18,7 @@ test("home page displays the CSMS starter details", async () => {
   assert.match(response.text, /Community Services Management System/);
   assert.match(response.text, /Sprint 0 - Developer Onboarding/);
   assert.match(response.text, /JavaScript with Express\.js/);
-  assert.match(response.text, /0\.1\.0/);
+  assert.match(response.text, /1\.0\.0/);
 });
 
 test("health endpoint returns the expected payload", async () => {
@@ -28,7 +28,7 @@ test("health endpoint returns the expected payload", async () => {
   assert.deepEqual(response.body, {
     status: "ok",
     application: "Community Services Management System",
-    version: "0.1.0"
+    version: "1.0.0"
   });
 });
 
@@ -221,4 +221,32 @@ test("unsupported resident status fails validation", () => {
 
   assert.equal(validator.isValid(resident), false);
   assert.equal(errors.includes("status"), true);
+});
+
+// ---------------------------------------------------------------------------
+// T16 Follow-up – Home page navigation (no dead ends)
+// ---------------------------------------------------------------------------
+
+test("home page contains links to all three module routes", async () => {
+  const response = await request(app).get("/");
+
+  assert.equal(response.statusCode, 200);
+  assert.match(response.text, /href="\/dashboard"/,          "home page must link to /dashboard");
+  assert.match(response.text, /href="\/residents"/,          "home page must link to /residents");
+  assert.match(response.text, /href="\/service-requests"/,   "home page must link to /service-requests");
+});
+
+test("home page navigation target /dashboard returns 200", async () => {
+  const response = await request(app).get("/dashboard");
+  assert.equal(response.statusCode, 200);
+});
+
+test("home page navigation target /residents returns 200", async () => {
+  const response = await request(app).get("/residents");
+  assert.equal(response.statusCode, 200);
+});
+
+test("home page navigation target /service-requests returns 200", async () => {
+  const response = await request(app).get("/service-requests");
+  assert.equal(response.statusCode, 200);
 });

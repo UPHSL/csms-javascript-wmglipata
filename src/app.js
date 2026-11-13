@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import express from "express";
 
+import { applicationConfig } from "./config/application.js";
 import { notFound } from "./middleware/notFound.js";
 import mainRoutes from "./routes/index.js";
 import { serviceRequestRoutes } from './routes/serviceRequestRoutes.js';
@@ -24,6 +25,10 @@ export function createApp() {
 
   app.set("views", path.join(currentDirectory, "views"));
   app.set("view engine", "ejs");
+
+  // Make the application version available to every EJS template automatically.
+  // This is the single source: applicationConfig.version (defined in config/application.js).
+  app.locals.appVersion = applicationConfig.version;
 
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
