@@ -86,5 +86,48 @@ export class ServiceRequestRepository {
       status: row.status
     }));
   }
+
+  getMetrics() {
+    const stmt = this.db.prepare(`
+      SELECT 
+        COUNT(*) as total,
+        SUM(CASE WHEN status = 'Pending' THEN 1 ELSE 0 END) as pending,
+        SUM(CASE WHEN status = 'In Progress' THEN 1 ELSE 0 END) as inProgress,
+        SUM(CASE WHEN status = 'Completed' THEN 1 ELSE 0 END) as completed,
+        SUM(CASE WHEN status = 'Cancelled' THEN 1 ELSE 0 END) as cancelled
+      FROM service_requests
+    `);
+    
+    const result = stmt.get();
+    
+    return {
+      total: result?.total || 0,
+      pending: result?.pending || 0,
+      inProgress: result?.inProgress || 0,
+      completed: result?.completed || 0,
+      cancelled: result?.cancelled || 0
+    };
+  }
+
+  findRecent(limit = 5) {
+    // 1. Fixed the SQL ORDER BY to use date_requested
+    const stmt = this.db.prepare(`
+      SELECT * FROM service_requests 
+      ORDER BY date_requested DESC, id DESC 
+      LIMIT ?
+    `);
+    
+    const rows = stmt.all(limit);
+    
+    // 2. Fixed the mapping to perfectly match your Domain Model constructor object pattern
+    return rows.map(row => new ServiceRequest({
+      id: row.id,
+      residentId: row.resident_id,
+      serviceType: row.service_type,
+      description: row.description,
+      dateRequested: row.date_requested,
+      status: row.status
+    }));
+  }
   
 }

@@ -133,6 +133,25 @@ deactivate(residentId) {
     const stmt = this.db.prepare(deactivateSQL);
     stmt.run(residentId);
   }
+
+  getMetrics() {
+    const stmt = this.db.prepare(`
+      SELECT 
+        COUNT(*) as total,
+        SUM(CASE WHEN status = 'Active' THEN 1 ELSE 0 END) as active,
+        SUM(CASE WHEN status = 'Inactive' THEN 1 ELSE 0 END) as inactive
+      FROM residents
+    `);
+    
+    const result = stmt.get();
+    
+    // Fallback to 0 if the table is completely empty (SQLite SUM returns null on empty)
+    return {
+      total: result?.total || 0,
+      active: result?.active || 0,
+      inactive: result?.inactive || 0
+    };
+  }
   
 }
 
