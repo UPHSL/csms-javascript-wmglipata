@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Service Request Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+  <!-- Navigation -->
+  <nav class="bg-blue-800 p-4 text-white shadow-lg">
+    <div class="container mx-auto flex gap-6 items-center">
+      <a href="/" class="font-bold tracking-wider text-xl mr-4 hover:text-blue-300 transition">CSMS</a>
+      <a href="/dashboard" class="hover:text-blue-300 transition">Dashboard</a>
+      <a href="/residents" class="hover:text-blue-300 transition">Resident Management</a>
+      <a href="/service-requests" class="hover:text-blue-300 transition font-semibold underline underline-offset-4">Service Request Management</a>
+    </div>
+  </nav>
+
+  <div class="container mx-auto p-6 max-w-6xl">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-3xl font-extrabold text-gray-800">Service Request Management</h1>
+      <a href="/service-requests/new"
+         class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-5 rounded-lg shadow-sm transition text-sm">
+        + Submit New Request
+      </a>
+    </div>
+
+    <!-- Search & Filter Card -->
+    <div class="bg-white rounded-xl shadow-md p-5 mb-6">
+      <form action="/service-requests" method="GET" class="flex flex-wrap items-center gap-3">
+        <input
+          type="text"
+          id="search"
+          name="search"
+          value="<%= searchQuery || '' %>"
+          placeholder="Search by type or description..."
+          class="flex-1 min-w-48 border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+        >
+        <select
+          id="status"
+          name="status"
+          class="border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition bg-white"
+        >
+          <option value="" <%= statusFilter === '' ? 'selected' : '' %>>All Statuses</option>
+          <option value="Pending" <%= statusFilter === 'Pending' ? 'selected' : '' %>>Pending</option>
+          <option value="In Progress" <%= statusFilter === 'In Progress' ? 'selected' : '' %>>In Progress</option>
+          <option value="Completed" <%= statusFilter === 'Completed' ? 'selected' : '' %>>Completed</option>
+          <option value="Cancelled" <%= statusFilter === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+        </select>
+        <button
+          type="submit"
+          class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-5 rounded-lg shadow-sm transition text-sm">
+          Search / Filter
+        </button>
+      </form>
+    </div>
+
+    <!-- Service Requests Table Card -->
+    <div class="bg-white rounded-xl shadow-md p-6">
+      <% if (serviceRequests && serviceRequests.length > 0) { %>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-gray-50 text-gray-600 uppercase text-xs tracking-wider border-b-2 border-gray-200">
+                <th class="py-4 px-6">ID</th>
+                <th class="py-4 px-6">Resident ID</th>
+                <th class="py-4 px-6">Service Type</th>
+                <th class="py-4 px-6">Date Requested</th>
+                <th class="py-4 px-6">Status</th>
+                <th class="py-4 px-6 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-700 text-sm">
+              <% serviceRequests.forEach(sr => { %>
+                <tr class="border-b border-gray-100 hover:bg-indigo-50 transition">
+                  <td><%= sr.id %></td>
+                  <td><%= sr.residentId %></td>
+                  <td><%= sr.serviceType %></td>
+                  <td class="py-4 px-6 text-gray-600"><%= sr.dateRequested %></td>
+                  <td class="py-4 px-6">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold
+                      <%= sr.status === 'Pending'     ? 'bg-yellow-100 text-yellow-700' :
+                          sr.status === 'In Progress' ? 'bg-blue-100 text-blue-700'    :
+                          sr.status === 'Completed'   ? 'bg-green-100 text-green-700'  :
+                                                        'bg-red-100 text-red-700'       %>">
+                      <%= sr.status %>
+                    </span>
+                  </td>
+                  <td class="py-4 px-6 text-center">
+                    <a href="/service-requests/<%= sr.id %>"
+                       class="inline-block bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-indigo-700 hover:shadow transition text-xs font-bold">
+                      View Details
+                    </a>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <div class="bg-gray-50 border-2 border-dashed border-gray-200 rounded-lg p-8 text-center">
+          <p class="text-gray-500 text-lg">No Service Requests found.</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- T16 Final Release Footer -->
+  <footer class="bg-gray-800 text-white text-center py-3 mt-8">
+    <p class="text-sm">CSMS v<%= appVersion %></p>
+  </footer>
+
+</body>
+</html>

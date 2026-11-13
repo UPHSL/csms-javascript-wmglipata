@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Submit Service Request</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+  <!-- Navigation -->
+  <nav class="bg-blue-800 p-4 text-white shadow-lg">
+    <div class="container mx-auto flex gap-6 items-center">
+      <a href="/" class="font-bold tracking-wider text-xl mr-4 hover:text-blue-300 transition">CSMS</a>
+      <a href="/dashboard" class="hover:text-blue-300 transition">Dashboard</a>
+      <a href="/residents" class="hover:text-blue-300 transition">Resident Management</a>
+      <a href="/service-requests" class="hover:text-blue-300 transition font-semibold underline underline-offset-4">Service Request Management</a>
+    </div>
+  </nav>
+
+  <div class="container mx-auto p-6 max-w-2xl">
+    <div class="mb-5 flex items-center gap-4">
+      <a href="/service-requests" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium transition">
+        &larr; Back to Service Requests
+      </a>
+      <span class="text-gray-300">|</span>
+      <a href="/residents" target="_blank" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium transition">
+        View Residents (Helper) &nearr;
+      </a>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-md p-8">
+      <h1 class="text-2xl font-extrabold text-gray-800 mb-6">Submit Service Request</h1>
+
+      <!-- Validation & Eligibility Feedback -->
+      <% if (errors && errors.length > 0) { %>
+        <div class="bg-red-50 border border-red-300 text-red-700 rounded-lg px-5 py-4 mb-6">
+          <p class="font-bold mb-2">Submission Failed:</p>
+          <ul class="list-disc list-inside text-sm space-y-1">
+            <% errors.forEach(err => { %>
+              <li><%= err %></li>
+            <% }) %>
+          </ul>
+        </div>
+      <% } %>
+
+      <!-- Submission Form (POST) -->
+      <form action="/service-requests/new" method="POST" class="space-y-5">
+
+        <div>
+          <label for="residentId" class="block text-sm font-semibold text-gray-700 mb-1">Resident ID</label>
+          <input
+            type="number"
+            id="residentId"
+            name="residentId"
+            value="<%= formData.residentId || '' %>"
+            required
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+          >
+        </div>
+
+        <div>
+          <label for="serviceType" class="block text-sm font-semibold text-gray-700 mb-1">Service Type</label>
+          <input
+            type="text"
+            id="serviceType"
+            name="serviceType"
+            value="<%= formData.serviceType || '' %>"
+            required
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+          >
+        </div>
+
+        <div>
+          <label for="dateRequested" class="block text-sm font-semibold text-gray-700 mb-1">Date Requested</label>
+          <input
+            type="date"
+            id="dateRequested"
+            name="dateRequested"
+            value="<%= formData.dateRequested || '' %>"
+            required
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+          >
+        </div>
+
+        <div>
+          <label for="description" class="block text-sm font-semibold text-gray-700 mb-1">Description</label>
+          <textarea
+            id="description"
+            name="description"
+            rows="4"
+            required
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition resize-none"
+          ><%= formData.description || '' %></textarea>
+        </div>
+
+        <p class="text-xs text-gray-500 italic">New requests are automatically set to &ldquo;Pending&rdquo; status.</p>
+
+        <div class="pt-2">
+          <button
+            type="submit"
+            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-6 rounded-lg shadow-sm transition">
+            Submit Request
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>
