@@ -79,7 +79,6 @@ test('T13 - Service Request Management Interface', async (t) => {
     const res = await request(app).get('/service-requests?search=Plumbing13&status=Pending');
     assert.match(res.text, /Plumbing13/);
     const resEmpty = await request(app).get('/service-requests?search=Electrical13&status=Completed');
-    // Look specifically for the table cell so we don't accidentally match the search box value!
     assert.doesNotMatch(resEmpty.text, /<td>Electrical13<\/td>/);
   });
 
@@ -133,9 +132,10 @@ test('T13 - Service Request Management Interface', async (t) => {
     });
     
     const listRes = await request(app).get('/service-requests');
-    const regex = new RegExp(`<td>(\\d+)<\\/td>\\s*<td>${activeResidentId}<\\/td>\\s*<td>CancelMeNow<\\/td>`);
-    const match = listRes.text.match(regex);
-    const cancelId = match ? parseInt(match[1], 10) : 3;
+    // More robust regex to capture the ID
+    const match = listRes.text.match(/<td>\s*(\d+)\s*<\/td>\s*<td>\s*\d+\s*<\/td>\s*<td>CancelMeNow<\/td>/);
+    const cancelId = match ? parseInt(match[1], 10) : null;
+    assert.ok(cancelId, 'Could not find the new Service Request ID');
 
     await request(app).post(`/service-requests/${cancelId}/cancel`); 
     const viewRes = await request(app).get(`/service-requests/${cancelId}`);
@@ -154,9 +154,9 @@ test('T13 - Service Request Management Interface', async (t) => {
     });
     
     const listRes = await request(app).get('/service-requests');
-    const regex = new RegExp(`<td>(\\d+)<\\/td>\\s*<td>${activeResidentId}<\\/td>\\s*<td>StartThenCancel<\\/td>`);
-    const match = listRes.text.match(regex);
-    const cancelId = match ? parseInt(match[1], 10) : 4;
+    const match = listRes.text.match(/<td>\s*(\d+)\s*<\/td>\s*<td>\s*\d+\s*<\/td>\s*<td>StartThenCancel<\/td>/);
+    const cancelId = match ? parseInt(match[1], 10) : null;
+    assert.ok(cancelId, 'Could not find the new Service Request ID');
 
     await request(app).post(`/service-requests/${cancelId}/start`); 
     await request(app).post(`/service-requests/${cancelId}/cancel`); 

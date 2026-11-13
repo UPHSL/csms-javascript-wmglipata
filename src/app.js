@@ -1,3 +1,4 @@
+import { dashboardRoutes } from './routes/dashboardRoutes.js';
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -31,6 +32,8 @@ export function createApp() {
   app.use(mainRoutes);
 
   app.use('/service-requests', serviceRequestRoutes);
+  
+  app.use('/dashboard', dashboardRoutes);
   
   app.use('/residents', residentRoutes); // <-- Move this BEFORE notFound
 
