@@ -1,51 +1,123 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Service Request Details</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <nav>
-    <a href="/service-requests">Back to Service Requests</a>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+  <!-- Navigation -->
+  <nav class="bg-blue-800 p-4 text-white shadow-lg">
+    <div class="container mx-auto flex gap-6 items-center">
+      <span class="font-bold tracking-wider text-xl mr-4">CSMS</span>
+      <a href="/dashboard" class="hover:text-blue-300 transition">Dashboard</a>
+      <a href="/residents" class="hover:text-blue-300 transition">Resident Management</a>
+      <a href="/service-requests" class="hover:text-blue-300 transition font-semibold underline underline-offset-4">Service Request Management</a>
+    </div>
   </nav>
 
-  <h1>Service Request Details</h1>
+  <div class="container mx-auto p-6 max-w-2xl">
+    <div class="mb-5">
+      <a href="/service-requests" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium transition">
+        &larr; Back to Service Requests
+      </a>
+    </div>
 
-  <ul>
-    <li><strong>Request ID:</strong> <%= serviceRequest.id %></li>
-    <li><strong>Resident ID:</strong> <%= serviceRequest.residentId %></li>
-    <li><strong>Service Type:</strong> <%= serviceRequest.serviceType %></li>
-    <li><strong>Date Requested:</strong> <%= serviceRequest.dateRequested %></li>
-    <li><strong>Description:</strong> <%= serviceRequest.description %></li>
-    <li><strong>Current Status:</strong> <span style="font-size: 1.2em;"><%= serviceRequest.status %></span></li>
-  </ul>
+    <!-- Details Card -->
+    <div class="bg-white rounded-xl shadow-md p-8 mb-6">
+      <div class="flex items-start justify-between mb-6">
+        <h1 class="text-2xl font-extrabold text-gray-800">Service Request Details</h1>
+        <span class="px-3 py-1 rounded-full text-xs font-bold
+          <%= serviceRequest.status === 'Pending'     ? 'bg-yellow-100 text-yellow-700' :
+              serviceRequest.status === 'In Progress' ? 'bg-blue-100 text-blue-700'    :
+              serviceRequest.status === 'Completed'   ? 'bg-green-100 text-green-700'  :
+                                                        'bg-red-100 text-red-700'       %>">
+          <%= serviceRequest.status %>
+        </span>
+      </div>
 
-  <hr>
+      <dl class="grid grid-cols-1 gap-4">
+        <div class="bg-gray-50 rounded-lg px-5 py-3 flex justify-between items-center border border-gray-100">
+          <dt class="text-xs font-bold uppercase tracking-wider text-gray-500">Request ID</dt>
+          <dd class="text-sm font-semibold text-gray-800"><%= serviceRequest.id %></dd>
+        </div>
+        <div class="bg-gray-50 rounded-lg px-5 py-3 flex justify-between items-center border border-gray-100">
+          <dt class="text-xs font-bold uppercase tracking-wider text-gray-500">Resident ID</dt>
+          <dd class="text-sm font-semibold text-gray-800"><%= serviceRequest.residentId %></dd>
+        </div>
+        <div class="bg-gray-50 rounded-lg px-5 py-3 flex justify-between items-center border border-gray-100">
+          <dt class="text-xs font-bold uppercase tracking-wider text-gray-500">Service Type</dt>
+          <dd class="text-sm font-semibold text-gray-800"><%= serviceRequest.serviceType %></dd>
+        </div>
+        <div class="bg-gray-50 rounded-lg px-5 py-3 flex justify-between items-center border border-gray-100">
+          <dt class="text-xs font-bold uppercase tracking-wider text-gray-500">Date Requested</dt>
+          <dd class="text-sm font-semibold text-gray-800"><%= serviceRequest.dateRequested %></dd>
+        </div>
+        <div class="bg-gray-50 rounded-lg px-5 py-3 border border-gray-100">
+          <dt class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">Description</dt>
+          <dd class="text-sm text-gray-700"><%= serviceRequest.description %></dd>
+        </div>
+        <div class="bg-gray-50 rounded-lg px-5 py-3 flex justify-between items-center border border-gray-100">
+          <dt class="text-xs font-bold uppercase tracking-wider text-gray-500">Current Status</dt>
+          <dd class="text-sm font-bold
+            <%= serviceRequest.status === 'Pending'     ? 'text-yellow-700' :
+                serviceRequest.status === 'In Progress' ? 'text-blue-700'   :
+                serviceRequest.status === 'Completed'   ? 'text-green-700'  :
+                                                          'text-red-700'     %>">
+            <%= serviceRequest.status %>
+          </dd>
+        </div>
+      </dl>
+    </div>
 
-  <h2>Workflow Actions</h2>
-  
-  <div style="display: flex; gap: 10px;">
-    <% if (serviceRequest.status === 'Pending') { %>
-      <!-- Pending Actions -->
-      <form action="/service-requests/<%= serviceRequest.id %>/start" method="POST">
-        <button type="submit" style="background-color: lightblue;">Start Processing</button>
-      </form>
-      <form action="/service-requests/<%= serviceRequest.id %>/cancel" method="POST">
-        <button type="submit" style="background-color: lightcoral;">Cancel Request</button>
-      </form>
+    <!-- Workflow Actions Card -->
+    <div class="bg-white rounded-xl shadow-md p-6">
+      <h2 class="text-lg font-bold text-gray-700 mb-4">Workflow Actions</h2>
 
-    <% } else if (serviceRequest.status === 'In Progress') { %>
-      <!-- In Progress Actions -->
-      <form action="/service-requests/<%= serviceRequest.id %>/complete" method="POST">
-        <button type="submit" style="background-color: lightgreen;">Complete Request</button>
-      </form>
-      <form action="/service-requests/<%= serviceRequest.id %>/cancel" method="POST">
-        <button type="submit" style="background-color: lightcoral;">Cancel Request</button>
-      </form>
+      <% if (serviceRequest.status === 'Pending') { %>
+        <!-- Pending Actions -->
+        <div class="flex gap-3">
+          <form action="/service-requests/<%= serviceRequest.id %>/start" method="POST">
+            <button type="submit"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-lg shadow-sm transition">
+              Start Processing
+            </button>
+          </form>
+          <form action="/service-requests/<%= serviceRequest.id %>/cancel" method="POST">
+            <button type="submit"
+              class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-5 rounded-lg shadow-sm transition">
+              Cancel Request
+            </button>
+          </form>
+        </div>
 
-    <% } else { %>
-      <!-- Terminal States (Completed, Cancelled) -->
-      <p><em>This request is <strong><%= serviceRequest.status %></strong>. No further workflow actions are available.</em></p>
-    <% } %>
+      <% } else if (serviceRequest.status === 'In Progress') { %>
+        <!-- In Progress Actions -->
+        <div class="flex gap-3">
+          <form action="/service-requests/<%= serviceRequest.id %>/complete" method="POST">
+            <button type="submit"
+              class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-5 rounded-lg shadow-sm transition">
+              Complete Request
+            </button>
+          </form>
+          <form action="/service-requests/<%= serviceRequest.id %>/cancel" method="POST">
+            <button type="submit"
+              class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-5 rounded-lg shadow-sm transition">
+              Cancel Request
+            </button>
+          </form>
+        </div>
+
+      <% } else { %>
+        <!-- Terminal States (Completed, Cancelled) -->
+        <div class="bg-gray-50 border border-gray-200 rounded-lg px-5 py-4 text-sm text-gray-600">
+          <p>This request is <strong class="font-bold text-gray-800"><%= serviceRequest.status %></strong>. No further workflow actions are available.</p>
+        </div>
+      <% } %>
+    </div>
+
   </div>
+
 </body>
 </html>

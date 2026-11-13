@@ -20,13 +20,16 @@ export class ResidentController {
   }
 
   list(req, res) {
-    const search = req.query.search ? req.query.search.trim() : '';
-    const residents = search 
-      ? this.queryService.searchResidents(search)  // changed
-      : this.queryService.listResidents();         // changed
-    
-    // Assuming EJS or standard Express view engine
-    res.render('residents/index', { residents, search });
+    try {
+      const search = req.query.search ? req.query.search.trim() : '';
+      const residents = search
+        ? this.queryService.searchResidents(search)
+        : this.queryService.listResidents();
+
+      res.render('residents/index', { residents, search });
+    } catch (error) {
+      res.status(500).send('An error occurred while loading residents.');
+    }
   }
 
   showRegister(req, res) {
@@ -52,11 +55,19 @@ export class ResidentController {
   }
 
   showEdit(req, res) {
-    const resident = this.queryService.findById(req.params.id);
-    if (!resident) {
+    const id = parseInt(req.params.id, 10);
+    if (!Number.isFinite(id)) {
       return res.status(404).send('Resident not found.');
     }
-    res.render('residents/edit', { resident, errors: [] });
+    try {
+      const resident = this.queryService.findById(id);
+      if (!resident) {
+        return res.status(404).send('Resident not found.');
+      }
+      res.render('residents/edit', { resident, errors: [] });
+    } catch (error) {
+      res.status(500).send('An error occurred while loading the resident.');
+    }
   }
 
   update(req, res) {
@@ -93,13 +104,17 @@ export class ResidentController {
 
   deactivate(req, res) {
     const id = parseInt(req.params.id, 10);
+    if (!Number.isFinite(id)) {
+      return res.status(404).send('Resident not found.');
+    }
     try {
-      // Change .deactivate() to match your service's method name
-      this.deactivationService.deactivateResident(id); 
+      const result = this.deactivationService.deactivateResident(id);
+      if (result && result.notFound) {
+        return res.status(404).send('Resident not found.');
+      }
       res.redirect('/residents');
     } catch (error) {
-      // Safely redirect back to the list if something goes wrong
-      res.redirect('/residents'); 
+      res.redirect('/residents');
     }
   }
 }

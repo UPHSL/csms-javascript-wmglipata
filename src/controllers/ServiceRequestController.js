@@ -64,20 +64,27 @@ export class ServiceRequestController {
   // GET /service-requests/:id
   show(req, res) {
     const id = parseInt(req.params.id, 10);
-    const serviceRequest = this.queryService.viewServiceRequest(id);
-    
-    if (!serviceRequest) {
+    if (!Number.isFinite(id)) {
       return res.status(404).send('Service Request not found.');
     }
-    
-    res.render('service-requests/show', { serviceRequest });
+    try {
+      const serviceRequest = this.queryService.viewServiceRequest(id);
+      if (!serviceRequest) {
+        return res.status(404).send('Service Request not found.');
+      }
+      res.render('service-requests/show', { serviceRequest });
+    } catch (error) {
+      res.status(500).send('An error occurred while loading the service request.');
+    }
   }
 
   // POST /service-requests/:id/start
   startProcessing(req, res) {
     const id = parseInt(req.params.id, 10);
+    if (!Number.isFinite(id)) {
+      return res.status(404).send('Service Request not found.');
+    }
     try {
-      // Use your exact T10 method
       this.statusService.updateStatus(id, 'In Progress');
       res.redirect(`/service-requests/${id}`);
     } catch (error) {
@@ -88,8 +95,10 @@ export class ServiceRequestController {
   // POST /service-requests/:id/complete
   complete(req, res) {
     const id = parseInt(req.params.id, 10);
+    if (!Number.isFinite(id)) {
+      return res.status(404).send('Service Request not found.');
+    }
     try {
-      // Use your exact T10 method
       this.statusService.updateStatus(id, 'Completed');
       res.redirect(`/service-requests/${id}`);
     } catch (error) {
@@ -100,8 +109,10 @@ export class ServiceRequestController {
   // POST /service-requests/:id/cancel
   cancel(req, res) {
     const id = parseInt(req.params.id, 10);
+    if (!Number.isFinite(id)) {
+      return res.status(404).send('Service Request not found.');
+    }
     try {
-      // Use your exact T10 method
       this.statusService.updateStatus(id, 'Cancelled');
       res.redirect(`/service-requests/${id}`);
     } catch (error) {

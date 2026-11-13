@@ -98,10 +98,10 @@ test('T12 - Resident Management Interface', async (t) => {
   });
 
   await t.test('13. POST /residents/:id/deactivate handles missing IDs safely', async () => {
-    // Based on your controller, it redirects back to /residents even on failure
+    // After hardening: deactivate on a non-existent ID now correctly returns 404
+    // instead of silently redirecting, so callers know the resource was not found.
     const res = await request(app).post('/residents/999999/deactivate');
-    assert.strictEqual(res.status, 302); 
-    assert.strictEqual(res.headers.location, '/residents');
+    assert.strictEqual(res.status, 404);
   });
 
   await t.test('14. GET /residents verifies the previously deactivated resident is now Inactive', async () => {

@@ -1,20 +1,117 @@
-<h1>Edit Resident</h1>
-<a href="/residents">Back to List</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Resident</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
 
-<p><strong>ID:</strong> <%= resident.id %></p>
-<p><strong>Status:</strong> <%= resident.status %></p>
+  <!-- Navigation -->
+  <nav class="bg-blue-800 p-4 text-white shadow-lg">
+    <div class="container mx-auto flex gap-6 items-center">
+      <span class="font-bold tracking-wider text-xl mr-4">CSMS</span>
+      <a href="/dashboard" class="hover:text-blue-300 transition">Dashboard</a>
+      <a href="/residents" class="hover:text-blue-300 transition font-semibold underline underline-offset-4">Resident Management</a>
+      <a href="/service-requests" class="hover:text-blue-300 transition">Service Request Management</a>
+    </div>
+  </nav>
 
-<% if (errors.length > 0) { %>
-  <ul style="color: red;">
-    <% errors.forEach(err => { %> <li><%= err %></li> <% }) %>
-  </ul>
-<% } %>
+  <div class="container mx-auto p-6 max-w-2xl">
+    <div class="mb-5">
+      <a href="/residents" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium transition">
+        &larr; Back to Resident List
+      </a>
+    </div>
 
-<form method="POST" action="/residents/<%= resident.id %>/edit">
-  <label>First Name: <input type="text" name="firstName" value="<%= resident.firstName %>"></label><br>
-  <label>Last Name: <input type="text" name="lastName" value="<%= resident.lastName %>"></label><br>
-  <label>Address: <input type="text" name="address" value="<%= resident.address %>"></label><br>
-  <label>Contact Number: <input type="text" name="contactNumber" value="<%= resident.contactNumber %>"></label><br>
-  <label>Email: <input type="email" name="email" value="<%= resident.email %>"></label><br>
-  <button type="submit">Update Resident</button>
-</form>
+    <div class="bg-white rounded-xl shadow-md p-8">
+      <div class="flex items-start justify-between mb-6">
+        <h1 class="text-2xl font-extrabold text-gray-800">Edit Resident</h1>
+        <div class="text-right text-sm text-gray-500">
+          <p><span class="font-semibold text-gray-700">ID:</span> <%= resident.id %></p>
+          <p class="mt-1">
+            <span class="font-semibold text-gray-700">Status:</span>
+            <span class="ml-1 px-2 py-0.5 rounded-full text-xs font-bold
+              <%= resident.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' %>">
+              <%= resident.status %>
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Validation Errors -->
+      <% if (errors.length > 0) { %>
+        <div class="bg-red-50 border border-red-300 text-red-700 rounded-lg px-5 py-4 mb-6">
+          <p class="font-bold mb-2">Please fix the following errors:</p>
+          <ul class="list-disc list-inside text-sm space-y-1">
+            <% errors.forEach(err => { %><li><%= err %></li><% }) %>
+          </ul>
+        </div>
+      <% } %>
+
+      <form method="POST" action="/residents/<%= resident.id %>/edit" class="space-y-5">
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">First Name</label>
+          <input
+            type="text"
+            name="firstName"
+            value="<%= resident.firstName %>"
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+          >
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Last Name</label>
+          <input
+            type="text"
+            name="lastName"
+            value="<%= resident.lastName %>"
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+          >
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Address</label>
+          <input
+            type="text"
+            name="address"
+            value="<%= resident.address %>"
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+          >
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Contact Number</label>
+          <input
+            type="text"
+            name="contactNumber"
+            value="<%= resident.contactNumber %>"
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+          >
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Email</label>
+          <input
+            type="email"
+            name="email"
+            value="<%= resident.email %>"
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+          >
+        </div>
+
+        <div class="pt-2">
+          <button
+            type="submit"
+            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-6 rounded-lg shadow-sm transition">
+            Update Resident
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>
