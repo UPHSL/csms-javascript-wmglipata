@@ -4,7 +4,7 @@
 
 export const applicationConfig = Object.freeze({
   name: "Community Services Management System",
-  version: "0.1.0",
+  version: "1.0.0",
   currentSprint: "Sprint 0 - Developer Onboarding",
   technology: "JavaScript with Express.js"
 });
