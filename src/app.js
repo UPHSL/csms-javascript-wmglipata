@@ -39,5 +39,14 @@ export function createApp() {
 
   app.use(notFound);
 
+  // Global error handler — must be 4-argument to be recognized by Express as an error handler.
+  // Catches any synchronous throw or next(err) that escapes a route handler.
+  // Does NOT expose stack traces or internal error messages to the client.
+  // eslint-disable-next-line no-unused-vars
+  app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(500).send('An unexpected error occurred.');
+  });
+
   return app;
 }
