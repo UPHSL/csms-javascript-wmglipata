@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Submit Service Request</title>
+</head>
+<body>
+  <nav>
+    <a href="/service-requests">Back to Service Requests</a> | 
+    <a href="/residents" target="_blank">View Residents (Helper)</a>
+  </nav>
+
+  <h1>Submit Service Request</h1>
+
+  <!-- Validation & Eligibility Feedback -->
+  <% if (errors && errors.length > 0) { %>
+    <div style="color: red; border: 1px solid red; padding: 10px; margin-bottom: 20px;">
+      <strong>Submission Failed:</strong>
+      <ul>
+        <% errors.forEach(err => { %>
+          <li><%= err %></li>
+        <% }) %>
+      </ul>
+    </div>
+  <% } %>
+
+  <!-- Submission Form (POST) -->
+  <form action="/service-requests/new" method="POST">
+    <div style="margin-bottom: 10px;">
+      <label for="residentId">Resident ID:</label><br>
+      <!-- Type set to number/text based on your T01 Resident ID type -->
+      <input type="number" id="residentId" name="residentId" value="<%= formData.residentId || '' %>" required>
+    </div>
+
+    <div style="margin-bottom: 10px;">
+      <label for="serviceType">Service Type:</label><br>
+      <input type="text" id="serviceType" name="serviceType" value="<%= formData.serviceType || '' %>" required>
+    </div>
+
+    <div style="margin-bottom: 10px;">
+      <label for="dateRequested">Date Requested:</label><br>
+      <input type="date" id="dateRequested" name="dateRequested" value="<%= formData.dateRequested || '' %>" required>
+    </div>
+
+    <div style="margin-bottom: 10px;">
+      <label for="description">Description:</label><br>
+      <textarea id="description" name="description" rows="4" cols="50" required><%= formData.description || '' %></textarea>
+    </div>
+
+    <p><em>Note: New requests are automatically set to "Pending" status.</em></p>
+
+    <button type="submit">Submit Request</button>
+  </form>
+</body>
+</html>

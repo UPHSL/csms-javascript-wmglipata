@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Service Request Management</title>
+</head>
+<body>
+  <nav>
+    <a href="/residents">Resident Management</a> | 
+    <a href="/service-requests">Service Request Management</a>
+  </nav>
+
+  <h1>Service Request Management</h1>
+
+  <!-- Search and Filter Form (GET) -->
+  <form action="/service-requests" method="GET" style="margin-bottom: 20px;">
+    <label for="search">Search (Type/Description):</label>
+    <input type="text" id="search" name="search" value="<%= searchQuery || '' %>">
+
+    <label for="status">Filter by Status:</label>
+    <select id="status" name="status">
+      <option value="" <%= statusFilter === '' ? 'selected' : '' %>>All Statuses</option>
+      <option value="Pending" <%= statusFilter === 'Pending' ? 'selected' : '' %>>Pending</option>
+      <option value="In Progress" <%= statusFilter === 'In Progress' ? 'selected' : '' %>>In Progress</option>
+      <option value="Completed" <%= statusFilter === 'Completed' ? 'selected' : '' %>>Completed</option>
+      <option value="Cancelled" <%= statusFilter === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+    </select>
+
+    <button type="submit">Search/Filter</button>
+  </form>
+
+  <div style="margin-bottom: 20px;">
+    <a href="/service-requests/new"><button>Submit New Service Request</button></a>
+  </div>
+
+  <!-- Service Request Data Table -->
+  <% if (serviceRequests && serviceRequests.length > 0) { %>
+    <table border="1" cellpadding="8">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Resident ID</th>
+          <th>Service Type</th>
+          <th>Date Requested</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% serviceRequests.forEach(sr => { %>
+          <tr>
+            <td><%= sr.id %></td>
+            <td><%= sr.residentId %></td>
+            <td><%= sr.serviceType %></td>
+            <td><%= sr.dateRequested %></td>
+            <td><strong><%= sr.status %></strong></td>
+            <td>
+              <a href="/service-requests/<%= sr.id %>">View Details</a>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No Service Requests found.</p>
+  <% } %>
+</body>
+</html>
